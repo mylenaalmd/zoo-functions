@@ -12,23 +12,26 @@ const animalsLocation = () => {
   return categLoc;
 };
 function animalsSex(options) {
-  let verificity = [];
+  const optionss = Object.values(options)[1];
+  const loc = {};
   const local = animalsLocation();
   Object.entries(local).forEach((v) => {
+    loc[v[0]] = [];
     v[1].forEach((item) => {
       const entrada = { [item]: species.find((especie) => especie.name === item)
-        .residents.filter((sex) => sex.sex === options.sex)
+        .residents.filter((sexo) => sexo.sex === `${optionss}`)
         .map((nome) => nome.name) };
-      if (options.sorted === true) {
+      if (options.sorted === undefined) {
+        loc[v[0]].push(entrada);
+      } else if (options.sorted === true) {
         entrada[item].sort();
+        loc[v[0]].push(entrada);
       }
-      verificity.push(entrada);
     });
-    local[v[0]] = verificity;
-    verificity = [];
   });
-  return local;
+  return loc;
 }
+
 function animalsName(options) {
   let verificity = [];
   const local = animalsLocation();
@@ -46,14 +49,14 @@ function animalsName(options) {
   });
   return local;
 }
-animalsSex({ sex: 'male' });
+
 function getAnimalMap(options) {
   // seu código aqui
   if (!options || !options.includeNames) {
     return animalsLocation();
   }
   if (options.sex === 'male' || options.sex === 'female') {
-    return animalsSex();
+    return animalsSex(options);
   }
   return animalsName(options);
 }
